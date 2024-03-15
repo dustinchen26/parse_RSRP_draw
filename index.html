@@ -1,0 +1,183 @@
+<!-- 
+  Copyright © [2023] [Dustin_Chen]. All rights reserved.
+  Author: Dustin_Chen
+  Email:  Dustin_Chen@compal.com or chuhpsdustin@gmail.com
+  
+  How to use: enter CPE, and use command to generate "output.txt". Paste the "output.txt" below, and push "Parse and Export to Excel"
+  【How to use】
+    0. Set the UE time correctly. ex: date -s "2024-03-12 10:22:10"
+    1. MobaXterm Session -> SSH -> Termnial settings -> Select "Log terminal output to": _DesktopDir_
+	2. ssh into CPE. ex: 10.205.164.10
+	3. use below command to read at+bnrinfo: 
+	   【CPE】read every 60 sec, until 3600 sec
+	   start_time=$(date +%s); while [ $(( $(date +%s) - start_time )) -lt 3600 ]; do echo -ne "$(date) - "; echo -ne "at+bnrinfo\r\n" | microcom -t 1000 /dev/ttyUSB1 | grep -E "dBm|bnrinfo"; sleep 60; done
+	   【Mifi】10 times
+	   for i in $(seq 1 10); do echo "$(date) - at+bnrinfo"; atcli at+bnrinfo; done
+	4. paste the _DesktopDir_ output file content below to parse
+
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parse_RSRP_SINR_PUSCH-power</title>
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      line-height: 1.2;
+      font-size: 14px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: auto;
+      margin: 15px;
+    }
+
+    th,
+    td {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 6px;
+    }
+
+    .red {
+      color: red;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    function parseLog() {
+      var inputText = document.getElementById('logInput').value;
+
+      // Regular expressions to extract required information
+      var regex =
+        /(\w{3} \w{3}\s+\d{1,2} \d{2}:\d{2}:\d{2} \S+ \d{4}) - at\+bnrinfo[\s\S]*?RX0 power:.*?rsrp: (-?\d+) dBm[\s\S]*?RX1 power:.*?rsrp: (-?\d+) dBm[\s\S]*?RX2 power:.*?rsrp: (-?\d+) dBm[\s\S]*?RX3 power:.*?rsrp: (-?\d+) dBm/g;
+
+      // Match regular expressions against input text
+      var matches = Array.from(inputText.matchAll(regex));
+
+      // Extract data for chart
+      var chartData = matches.map(function(match) {
+        return {
+          time: match[1],
+          RX0: parseInt(match[2]),
+          RX1: parseInt(match[3]),
+          RX2: parseInt(match[4]),
+          RX3: parseInt(match[5])
+        };
+      });
+
+      // Prepare data for chart
+      var labels = chartData.map(function(entry) {
+        return entry.time;
+      });
+      var rx0Values = chartData.map(function(entry) {
+        return entry.RX0;
+      });
+      var rx1Values = chartData.map(function(entry) {
+        return entry.RX1;
+      });
+      var rx2Values = chartData.map(function(entry) {
+        return entry.RX2;
+      });
+      var rx3Values = chartData.map(function(entry) {
+        return entry.RX3;
+      });
+
+      // Draw chart
+      var ctx = document.getElementById('chartCanvas').getContext('2d');
+      var chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+              label: 'RX0',
+              borderColor: 'red',
+              data: rx0Values,
+              fill: false
+            },
+            {
+              label: 'RX1',
+              borderColor: 'blue',
+              data: rx1Values,
+              fill: false
+            },
+            {
+              label: 'RX2',
+              borderColor: 'green',
+              data: rx2Values,
+              fill: false
+            },
+            {
+              label: 'RX3',
+              borderColor: 'orange',
+              data: rx3Values,
+              fill: false
+            }
+          ]
+        },
+        options: {
+          scales: {
+            xAxes: [{
+              type: 'time',
+              time: {
+                unit: 'minute',
+                displayFormats: {
+                  minute: 'HH:mm'
+                }
+              },
+              scaleLabel: {
+                display: true,
+                labelString: 'Time'
+              }
+            }],
+            yAxes: [{
+              scaleLabel: {
+                display: true,
+                labelString: 'RSRP (dBm)'
+              }
+            }]
+          }
+        }
+      });
+    }
+  </script>
+</head>
+
+<body>
+  <h2>Parse_RSRP_SINR_PUSCH-power</h2>
+  <p style="margin: 0;">Author: Dustin_Chen, email: <a href="mailto:Dustin_Chen@compal.com"
+      style="line-height: 1;">Dustin_Chen@compal.com</a> or <a href="mailto:chuhpsdustin@gmail.com"
+      style="line-height: 1;">chuhpsdustin@gmail.com</a></p>
+  <ul>
+    <li><strong>【How to use】</strong>
+      <ul>
+        <li>step0. Set the UE time correctly. ex:<br>
+          <span class="red">date -s "2024-03-12 10:22:10"</span>
+        </li>
+        <li>step1. MobaXterm Session -> SSH -> Termnial settings -> Select "Log terminal output to": _DesktopDir_</li>
+        <li>step2. ssh into CPE. ex: 10.205.164.10 </li>
+        <li>step3-1 【ATOP_CPE】use below command to read at+bnrinfo: read every 60 sec, until 3600 sec <br>
+          <span class="red">start_time=$(date +%s); while [ $(( $(date +%s) - start_time )) -lt 3600 ]; do echo -ne "$(date) - "; echo -ne "at+bnrinfo\r\n" | microcom -t 1000 /dev/ttyUSB1 | grep -E "dBm|bnrinfo"; sleep 60; done</span>
+        </li>
+        <li>step3-2 【Mifi】use below command to run 10 times <br>
+          <span class="red">for i in $(seq 1 10); do echo "$(date) - at+bnrinfo"; atcli at+bnrinfo; done</span>
+        </li>
+        <li>step4. paste the _DesktopDir_ output file content below to parse</li>
+        <textarea id="logInput" rows="10" cols="80"></textarea>
+        <br>
+        <button onclick="parseLog()">Parse and Export to Excel</button>
+        <canvas id="chartCanvas" width="800" height="400"></canvas>
+      </ul>
+    </li>
+
+  </ul>
+
+</body>
+
+</html>
