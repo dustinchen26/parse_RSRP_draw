@@ -1,21 +1,3 @@
-<!-- 
-  Copyright © [2023] [Dustin_Chen]. All rights reserved.
-  Author: Dustin_Chen
-  Email:  Dustin_Chen@compal.com or chuhpsdustin@gmail.com
-  
-  How to use: enter CPE, and use command to generate "output.txt". Paste the "output.txt" below, and push "Parse and Export to Excel"
-  【How to use】
-    0. Set the UE time correctly. ex: date -s "2024-03-12 10:22:10"
-    1. MobaXterm Session -> SSH -> Termnial settings -> Select "Log terminal output to": _DesktopDir_
-	2. ssh into CPE. ex: 10.205.164.10
-	3. use below command to read at+bnrinfo: 
-	   【CPE】read every 60 sec, until 3600 sec
-	   start_time=$(date +%s); while [ $(( $(date +%s) - start_time )) -lt 3600 ]; do echo -ne "$(date) - "; echo -ne "at+bnrinfo\r\n" | microcom -t 1000 /dev/ttyUSB1 | grep -E "dBm|bnrinfo"; sleep 60; done
-	   【Mifi】10 times
-	   for i in $(seq 1 10); do echo "$(date) - at+bnrinfo"; atcli at+bnrinfo; done
-	4. paste the _DesktopDir_ output file content below to parse
-
--->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -30,12 +12,6 @@
       font-size: 14px;
     }
 
-    canvas {
-      max-width: 1000px;
-      max-height: 500px;
-      margin: 20px;
-    }
-	
     table {
       border-collapse: collapse;
       width: auto;
@@ -51,7 +27,12 @@
 
     .red {
       color: red;
-    }	
+    }
+
+    canvas {
+      max-width: 800px;
+      margin: 20px;
+    }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -67,7 +48,9 @@
       var matches = inputText.matchAll(regex);
 
       var times = [];
+      var puschtXPower = [];
       var rsrp = [];
+      var sinr = [];
       var rx0Rsrp = [];
       var rx1Rsrp = [];
       var rx2Rsrp = [];
@@ -76,7 +59,9 @@
       for (const match of matches) {
         if (match && match.length === 9) {
           times.push(match[1]);
+          puschtXPower.push(parseInt(match[2]));
           rsrp.push(parseInt(match[3]));
+          sinr.push(parseInt(match[4]));
           rx0Rsrp.push(parseInt(match[5]));
           rx1Rsrp.push(parseInt(match[6]));
           rx2Rsrp.push(parseInt(match[7]));
@@ -90,37 +75,51 @@
         data: {
           labels: times,
           datasets: [{
+              label: 'PUSCH TX Power',
+              data: puschtXPower,
+              borderColor: 'rgba(255, 99, 132, 1)',
+              borderWidth: 1,
+              fill: false
+            },
+            {
               label: 'RSRP',
               data: rsrp,
-              borderColor: 'rgba(255, 99, 132, 1)',
+              borderColor: 'rgba(54, 162, 235, 1)',
+              borderWidth: 1,
+              fill: false
+            },
+            {
+              label: 'SINR',
+              data: sinr,
+              borderColor: 'rgba(255, 206, 86, 1)',
               borderWidth: 1,
               fill: false
             },
             {
               label: 'RX0 RSRP',
               data: rx0Rsrp,
-              borderColor: 'rgba(54, 162, 235, 1)',
+              borderColor: 'rgba(75, 192, 192, 1)',
               borderWidth: 1,
               fill: false
             },
             {
               label: 'RX1 RSRP',
               data: rx1Rsrp,
-              borderColor: 'rgba(255, 206, 86, 1)',
+              borderColor: 'rgba(153, 102, 255, 1)',
               borderWidth: 1,
               fill: false
             },
             {
               label: 'RX2 RSRP',
               data: rx2Rsrp,
-              borderColor: 'rgba(75, 192, 192, 1)',
+              borderColor: 'rgba(255, 159, 64, 1)',
               borderWidth: 1,
               fill: false
             },
             {
               label: 'RX3 RSRP',
               data: rx3Rsrp,
-              borderColor: 'rgba(153, 102, 255, 1)',
+              borderColor: 'rgba(54, 162, 235, 1)',
               borderWidth: 1,
               fill: false
             }
@@ -156,27 +155,28 @@
   <ul>
     <li><strong>【How to use】</strong>
       <ul>
-        <li>step0. Set the UE time correctly. ex:<br>
-          <span class="red">date -s "2024-03-12 10:22:10"</span>
-        </li>
-        <li>step1. MobaXterm Session -> SSH -> Termnial settings -> Select "Log terminal output to": _DesktopDir_</li>
-        <li>step2. ssh into CPE. ex: 10.205.164.10 </li>
-        <li>step3-1 【ATOP_CPE】use below command to read at+bnrinfo: read every 60 sec, until 3600 sec <br>
-          <span class="red">start_time=$(date +%s); while [ $(( $(date +%s) - start_time )) -lt 3600 ]; do echo -ne "$(date) - "; echo -ne "at+bnrinfo\r\n" | microcom -t 1000 /dev/ttyUSB1 | grep -E "dBm|bnrinfo"; sleep 60; done</span>
-        </li>
-        <li>step3-2 【Mifi】use below command to run 10 times <br>
-          <span class="red">for i in $(seq 1 10); do echo "$(date) - at+bnrinfo"; atcli at+bnrinfo; done</span>
-        </li>
-        <li>step4. paste the _DesktopDir_ output file content below to parse</li>
+	  	<li> step0. Set the UE time correctly. ex:<br>
+			<span class="red">date -s "2024-03-12 10:22:10"</span>
+		</li>
+        <li> step1. MobaXterm Session -> SSH -> Termnial settings -> Select "Log terminal output to": _DesktopDir_</li>
+        <li> step2. ssh into CPE. ex: 10.205.164.10 </li>
+		<li> step3-1 【ATOP_CPE】use below command to read at+bnrinfo: read every 60 sec, until 3600 sec <br>
+				<span class="red">start_time=$(date +%s); while [ $(( $(date +%s) - start_time )) -lt 3600 ]; do echo -ne "$(date) - "; echo -ne "at+bnrinfo\r\n" | microcom -t 1000 /dev/ttyUSB1 | grep -E "dBm|bnrinfo"; sleep 60; done</span>
+		</li>
+		<li> step3-2 【Mifi】use below command to run 10 times <br>
+				<span class="red">for i in $(seq 1 10); do echo "$(date) - at+bnrinfo"; atcli at+bnrinfo; done</span>
+		</li>
+        <li> step4. paste the _DesktopDir_ output file content below to parse</li>
         <textarea id="logInput" rows="10" cols="80"></textarea>
+        <br>
+        <button onclick="parseLog()">Parse and Export to Excel</button>
+        <canvas id="chart"></canvas>
+        <div id="debug"></div>
+      </ul>
     </li>
-    <li>
-      <button onclick="parseLog()">Parse and Export to Excel</button>
-    </li>
-
-      <canvas id="chart"></canvas>
 
   </ul>
+
 </body>
 
 </html>
