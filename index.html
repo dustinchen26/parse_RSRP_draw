@@ -35,7 +35,7 @@
       max-height: 500px;
       margin: 20px;
     }
-	
+
     table {
       border-collapse: collapse;
       width: auto;
@@ -51,7 +51,7 @@
 
     .red {
       color: red;
-    }	
+    }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -63,7 +63,7 @@
 
       // Regular expressions to extract required information
       var regex =
-      /(\w{3} \w{3}\s+\d{1,2} \d{2}:\d{2}:\d{2} \S+ \d{4}) - at\+bnrinfo[\s\S]*?averaged PUSCH TX power :(-?\d+) dBm[\s\S]*?RSRP (-?\d+) dBm[\s\S]*?SINR (\d+) dB[\s\S]*?RX0 power:.*?rsrp: (-?\d+) dBm[\s\S]*?RX1 power:.*?rsrp: (-?\d+) dBm[\s\S]*?RX2 power:.*?rsrp: (-?\d+) dBm[\s\S]*?RX3 power:.*?rsrp: (-?\d+) dBm/g;
+        /(\w{3} \w{3}\s+\d{1,2} \d{2}:\d{2}:\d{2} \S+ \d{4}) - at\+bnrinfo[\s\S]*?averaged PUSCH TX power :(-?\d+) dBm[\s\S]*?RSRP (-?\d+) dBm[\s\S]*?SINR (\d+) dB[\s\S]*?RX0 power:.*?rsrp: (-?\d+) dBm[\s\S]*?RX1 power:.*?rsrp: (-?\d+) dBm[\s\S]*?RX2 power:.*?rsrp: (-?\d+) dBm[\s\S]*?RX3 power:.*?rsrp: (-?\d+) dBm/g;
 
       // Match regular expressions against input text
       var matches = inputText.matchAll(regex);
@@ -97,41 +97,51 @@
         data: {
           labels: times,
           datasets: [{
-              label: 'RSRP',
-              data: rsrp,
-              borderColor: 'rgba(255, 99, 132, 1)',
-              borderWidth: 2,
-              fill: false
-            },
-            {
-              label: 'RX0 RSRP',
-              data: rx0Rsrp,
-              borderColor: 'rgba(54, 162, 235, 1)',
-              borderWidth: 1,
-              fill: false
-            },
-            {
-              label: 'RX1 RSRP',
-              data: rx1Rsrp,
-              borderColor: 'rgba(255, 206, 86, 1)',
-              borderWidth: 1,
-              fill: false
-            },
-            {
-              label: 'RX2 RSRP',
-              data: rx2Rsrp,
-              borderColor: 'rgba(75, 192, 192, 1)',
-              borderWidth: 1,
-              fill: false
-            },
-            {
-              label: 'RX3 RSRP',
-              data: rx3Rsrp,
-              borderColor: 'rgba(153, 102, 255, 1)',
-              borderWidth: 1,
-              fill: false
-            }
-          ]
+            label: 'RSRP',
+            data: rsrp,
+            pointStyle: 'circle', // 將點的樣式設置為圓形
+            pointRadius: 2, // 將點的半徑設置為2（您可以根據需要進行調整）
+            pointBackgroundColor: 'rgba(255, 99, 132, 1)', // 將點的背景色設置為紅色
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 2, // 寬度
+            fill: false
+          }, {
+            label: 'RX0 RSRP',
+            data: rx0Rsrp,
+            pointStyle: 'circle',
+            pointRadius: 2,
+            pointBackgroundColor: 'rgba(54, 162, 235, 1)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1,
+            fill: false
+          }, {
+            label: 'RX1 RSRP',
+            data: rx1Rsrp,
+            pointStyle: 'circle',
+            pointRadius: 2,
+            pointBackgroundColor: 'rgba(255, 206, 86, 1)',
+            borderColor: 'rgba(255, 206, 86, 1)',
+            borderWidth: 1,
+            fill: false
+          }, {
+            label: 'RX2 RSRP',
+            data: rx2Rsrp,
+            pointStyle: 'circle',
+            pointRadius: 2,
+            pointBackgroundColor: 'rgba(75, 192, 192, 1)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1,
+            fill: false
+          }, {
+            label: 'RX3 RSRP',
+            data: rx3Rsrp,
+            pointStyle: 'circle',
+            pointRadius: 2,
+            pointBackgroundColor: 'rgba(153, 102, 255, 1)',
+            borderColor: 'rgba(153, 102, 255, 1)',
+            borderWidth: 1,
+            fill: false
+          }]
         },
         options: {
           scales: {
@@ -169,7 +179,9 @@
         <li>step1. MobaXterm Session -> SSH -> Termnial settings -> Select "Log terminal output to": _DesktopDir_</li>
         <li>step2. ssh into CPE. ex: 10.205.164.10 </li>
         <li>step3-1 【ATOP_CPE】use below command to read at+bnrinfo: read every 60 sec, until 3600 sec <br>
-          <span class="red">start_time=$(date +%s); while [ $(( $(date +%s) - start_time )) -lt 3600 ]; do echo -ne "$(date) - "; echo -ne "at+bnrinfo\r\n" | microcom -t 1000 /dev/ttyUSB1 | grep -E "dBm|bnrinfo"; sleep 60; done</span>
+          <span class="red">start_time=$(date +%s); while [ $(( $(date +%s) - start_time )) -lt 3600 ]; do echo -ne
+            "$(date) - "; echo -ne "at+bnrinfo\r\n" | microcom -t 1000 /dev/ttyUSB1 | grep -E "dBm|bnrinfo"; sleep 60;
+            done</span>
         </li>
         <li>step3-2 【Mifi】use below command to run 10 times <br>
           <span class="red">for i in $(seq 1 10); do echo "$(date) - at+bnrinfo"; atcli at+bnrinfo; done</span>
@@ -181,7 +193,7 @@
       <button onclick="parseLog()">Parse and draw RSRP</button>
     </li>
 
-      <canvas id="chart"></canvas>
+    <canvas id="chart"></canvas>
 
   </ul>
 </body>
