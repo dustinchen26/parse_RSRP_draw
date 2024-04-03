@@ -95,7 +95,7 @@
       myChart = new Chart(ctx, {
         type: 'line',
         data: {
-          labels: times,
+          labels: times.map(time => time.substring(3, 19)), // 只保留 月 日 小時 分 秒
           datasets: [{
             label: 'RSRP',
             data: rsrp,
