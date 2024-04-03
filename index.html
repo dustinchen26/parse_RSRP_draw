@@ -100,27 +100,18 @@
             label: 'RSRP',
             data: rsrp,
             pointStyle: 'circle', // 將點的樣式設置為圓形
-            pointRadius: 2, // 將點的半徑設置為2（您可以根據需要進行調整）
-            pointBackgroundColor: 'rgba(255, 99, 132, 1)', // 將點的背景色設置為紅色
-            borderColor: 'rgba(255, 99, 132, 1)',
-            borderWidth: 2, // 寬度
+            pointRadius: 2, // 將點的半徑設置為2
+            pointBackgroundColor: 'rgba(0, 153, 255, 1)', // 藍色
+            borderColor: 'rgba(0, 153, 255, 1)',
+            borderWidth: 1, // 寬度
             fill: false
           }, {
             label: 'RX0 RSRP',
             data: rx0Rsrp,
             pointStyle: 'circle',
             pointRadius: 2,
-            pointBackgroundColor: 'rgba(54, 162, 235, 1)',
-            borderColor: 'rgba(54, 162, 235, 1)',
-            borderWidth: 1,
-            fill: false
-          }, {
-            label: 'RX1 RSRP',
-            data: rx1Rsrp,
-            pointStyle: 'circle',
-            pointRadius: 2,
-            pointBackgroundColor: 'rgba(255, 206, 86, 1)',
-            borderColor: 'rgba(255, 206, 86, 1)',
+            pointBackgroundColor: 'rgba(255, 102, 0, 1)', // 橙色
+            borderColor: 'rgba(255, 102, 0, 1)',
             borderWidth: 1,
             fill: false
           }, {
@@ -128,8 +119,17 @@
             data: rx2Rsrp,
             pointStyle: 'circle',
             pointRadius: 2,
-            pointBackgroundColor: 'rgba(75, 192, 192, 1)',
-            borderColor: 'rgba(75, 192, 192, 1)',
+            pointBackgroundColor: 'rgba(255, 200, 103, 1)', // 黃色
+            borderColor: 'rgba(253, 205, 3, 1)',
+            borderWidth: 1,
+            fill: false
+          }, {
+            label: 'RX1 RSRP',
+            data: rx1Rsrp,
+            pointStyle: 'circle',
+            pointRadius: 2,
+            pointBackgroundColor: 'rgba(150, 150, 150, 1)', // 灰色
+            borderColor: 'rgba(150, 150, 150, 1)',
             borderWidth: 1,
             fill: false
           }, {
@@ -137,12 +137,13 @@
             data: rx3Rsrp,
             pointStyle: 'circle',
             pointRadius: 2,
-            pointBackgroundColor: 'rgba(153, 102, 255, 1)',
-            borderColor: 'rgba(153, 102, 255, 1)',
+            pointBackgroundColor: 'rgba(0, 102, 204, 1)', // 藍色
+            borderColor: 'rgba(0, 102, 204, 1)',
             borderWidth: 1,
             fill: false
           }]
         },
+
         options: {
           scales: {
             xAxes: [{
