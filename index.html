@@ -77,6 +77,9 @@
 
       for (const match of matches) {
         if (match && match.length === 9) {
+          if (parseInt(match[3]) === -32768) {
+            continue; // 如果RSRP为-32768 dBm，跳过当前循环
+          }
           times.push(match[1]);
           rsrp.push(parseInt(match[3]));
           rx0Rsrp.push(parseInt(match[5]));
