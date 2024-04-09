@@ -101,7 +101,7 @@
           labels: times.map(time => time.substring(3, 19)), // 只保留 月 日 小時 分 秒
           datasets: [
 		  {
-            label: 'Threshold1',
+            label: 'RSRP=-70',
             data: Array.from({ length: rsrp.length }, () => -70), // 水平線數值為 -70
             pointStyle: 'line', // 將點的樣式設置為線
             pointRadius: 0, // 將點的半徑設置為0
@@ -110,7 +110,7 @@
 			fill: false,
 			borderDash: [5, 5] // 設置為虛線，5像素的線，5像素的間隔
           }, {
-            label: 'Threshold2',
+            label: 'RSRP=-90',
             data: Array.from({ length: rsrp.length }, () => -90), // 水平線數值為 -90
             pointStyle: 'line', // 將點的樣式設置為線
             pointRadius: 0, // 將點的半徑設置為0
@@ -119,7 +119,7 @@
 			fill: false,
 			borderDash: [5, 5] // 設置為虛線，5像素的線，5像素的間隔
           }, {
-            label: 'Threshold3',
+            label: 'RSRP=-110',
             data: Array.from({ length: rsrp.length }, () => -110), // 水平線數值為 -110
             pointStyle: 'line', // 將點的樣式設置為線
             pointRadius: 0, // 將點的半徑設置為0
