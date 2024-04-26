@@ -56,7 +56,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
-    var myChart; // 声明图表变量
+    var myChart; // 聲明圖表變數
 
     function parseLog() {
       var inputText = document.getElementById('logInput').value;
@@ -78,7 +78,7 @@
       for (const match of matches) {
         if (match && match.length === 9) {
           if (parseInt(match[3]) === -32768) {
-            continue; // 如果RSRP为-32768 dBm，跳过当前循环
+            continue; // 如果RSRP為-32768 dBm，跳過當前迴圈
           }
           times.push(match[1]);
           rsrp.push(parseInt(match[3]));
@@ -89,7 +89,7 @@
         }
       }
 
-      // 清除之前的图表数据
+      // 清除之前的圖表資料
       if (myChart) {
         myChart.destroy();
       }
@@ -102,38 +102,38 @@
           datasets: [
 		  {
             label: 'RSRP=-70',
-            data: Array.from({ length: rsrp.length }, () => -70), // 水平線數值為 -70
+            data: Array.from({ length: rsrp.length }, () => -70), // 水準線數值為 -70
             pointStyle: 'line', // 將點的樣式設置為線
             pointRadius: 0, // 將點的半徑設置為0
             borderColor: 'white',
             borderWidth: 1,
 			fill: false,
-			borderDash: [5, 5] // 設置為虛線，5像素的線，5像素的間隔
+			borderDash: [5, 5] // 設置為虛線，5圖元的線，5圖元的間隔
           }, {
             label: 'RSRP=-90',
-            data: Array.from({ length: rsrp.length }, () => -90), // 水平線數值為 -90
+            data: Array.from({ length: rsrp.length }, () => -90), // 水準線數值為 -90
             pointStyle: 'line', // 將點的樣式設置為線
             pointRadius: 0, // 將點的半徑設置為0
             borderColor: 'magenta',
             borderWidth: 3,
 			fill: false,
-			borderDash: [5, 0] // 設置為虛線，5像素的線，5像素的間隔
+			borderDash: [5, 0] // 設置為虛線，5圖元的線，5圖元的間隔
           }, {
             label: 'RSRP=-110',
-            data: Array.from({ length: rsrp.length }, () => -110), // 水平線數值為 -110
+            data: Array.from({ length: rsrp.length }, () => -110), // 水準線數值為 -110
             pointStyle: 'line', // 將點的樣式設置為線
             pointRadius: 0, // 將點的半徑設置為0
             borderColor: 'white',
             borderWidth: 1,
 			fill: false,
-			borderDash: [5, 5] // 設置為虛線，5像素的線，5像素的間隔
+			borderDash: [5, 5] // 設置為虛線，5圖元的線，5圖元的間隔
           }, {
             label: 'RSRP',
             data: rsrp,
             pointStyle: 'circle', // 將點的樣式設置為圓形
             pointRadius: 0, // 將點的半徑設置為2
-            pointBackgroundColor: 'rgba(0, 153, 255, 1)', // 淺藍色
-			borderColor: 'rgba(0, 153, 255, 1)',
+              pointBackgroundColor: 'rgba(0, 153, 0, 1)', // Change light blue to 綠色
+              borderColor: 'rgba(0, 153, 0, 1)', // Change light blue to 綠色
             borderWidth: 1, // 寬度
             fill: false
           }, {
